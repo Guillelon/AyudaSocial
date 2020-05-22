@@ -1,0 +1,147 @@
+﻿@model Repositories.Models.VolunteerPoll
+@using reCAPTCHA.MVC
+<div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body" style="padding:35px">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+                    @using (Html.BeginForm("Volunteer", "Polls", null, FormMethod.Post, new { @id = "theForm", @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <small><span class="required">*</span> Los campos con asterisco son mandatorios.</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Nombre</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Apellido</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Edad</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Age, new { @type = "numeric", @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Teléfono de llamar</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Teléfono de WhatsApp</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.ChatNumber, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Tiene Auto?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.HaveCar, Presentation.Helpers.YesNoQuestion().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Puede aportar los minutos de su plan de hacer llamadas?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.CanSupportWithMinutes, Presentation.Helpers.YesNoQuestion().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿En qué área vive?</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.AreaAddress, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Qué horario tiene disponible para dedicarle ayuda social panama?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.TimeToHelp, Presentation.Helpers.TimeToHelp().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿A qué te dedicas?</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Profession, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Cuáles son tus pasatiempos o deportes?</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Hobbies, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Qué talento te gustaría tienes o te gustaría compartir?</label> <span class="required">*</span>
+                            <small>(Ejemplo fotografia, video, redaccion, diseno grafico, promotor, comunicador social, contabilidad, relaciones publicas)</small>
+                            @Html.TextBoxFor(m => m.WayToHelp, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Cuál es tu cuenta en Instagram?</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.InstagramAccount, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Estás dispuesto a compartir de ayuda social panama en sus redes sociales y con su red de contactos? </label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.AbleToCollectMoney, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Para poder seguir ayudando a mas familias los aportes y donaciones son muy importantes ¿Estás dispuesto ayudarnos a colectar aportes dentro de su circulo de contacto y relaciones?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.HaveCar, Presentation.Helpers.YesNoQuestion().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Como equipo, necesitamos de la participation de todos y queremos seguir tu iniciativa ¿Tienes alguna idea, plan o estrategia para aplicar a la situacion actual que vive el país y ayudar a las familias de Panamá?  </label> <span class="required">*</span>
+                            @Html.TextAreaFor(m => m.Comments, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            @Html.Recaptcha()
+                        </div>
+                        <hr />
+                        <div style="text-align:center">
+                            <button type="submit" class="btn btn-info">Aceptar</button>
+                            &nbsp;&nbsp;
+                            <img style="display:none" id="loading" width="25" height="25" src="~/Images/loading.gif" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+

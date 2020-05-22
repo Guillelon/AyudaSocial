@@ -1,0 +1,155 @@
+﻿@model Presentation.Models.HelpPollDTO
+@using reCAPTCHA.MVC
+<div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body" style="padding:35px">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+                    @using (Html.BeginForm("Help", "Polls", null, FormMethod.Post, new { @id = "theForm", @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <small><span class="required">*</span> Los campos con asterisco son mandatorios.</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Poll.Email, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Solicita ayuda para usted o refiere a una persona?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.Poll.WhosHelping, Presentation.Helpers.HelpType().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Nombre</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Poll.FirstName, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Apellido</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Poll.LastName, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Teléfono de llamar</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Poll.PhoneNumber, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Teléfono de WhatsApp</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Poll.ChatNumber, new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Qué nivel de necesidad tiene?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.Poll.HelpNeededImportance, Presentation.Helpers.HelpNeeded().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Qué tipo de residencia tiene?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.Poll.ResidenceType, Presentation.Helpers.ResidenceType().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Cuántas personas mayores de 70 años viven en la residencia?</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Poll.HowManyEldersInHouseHold, new { @type = "numeric", @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Cuantas personas mayores de edad hay en su residencia?</label> <span class="required">*</span>
+                            @Html.TextBoxFor(m => m.Poll.HowManyAdultsInHouseHold, new { @type = "numeric", @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>Colocar los rangos de edad que aplican para su residencia</label> <span class="required">*</span>
+                            <div class="row">
+                                @foreach (var item in Model.MultipleChoiceAgeRange)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="checkbox">
+                                            <label style="padding-left:0px">
+                                                <input type="checkbox"
+                                                       name="SelectedAgeRange"
+                                                       value="@item.Name"
+                                                       @if (Model.SelectedAgeRange.Contains(item.Name)) { <text> checked </text> } />
+                                                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                                @item.Name
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Hay dentro de la residencia algún funcionario público?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.Poll.HouseHoldHasPublicOfficer, Presentation.Helpers.YesNoQuestion().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿Alguien dentro de la residencia trabaja actualmente o tiene ingresos de algun tipo?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.Poll.HouseHoldHasIncome, Presentation.Helpers.YesNoQuestion().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label>¿A qué se dedica usted?</label> <span class="required">*</span>
+                            <br />
+                            @Html.DropDownListFor(model => model.Poll.Profession, Presentation.Helpers.HelpProfession().Select(option => new SelectListItem
+                            {
+                                Text = Html.Raw(option).ToHtmlString(),
+                                Value = option.ToString(),
+                                Selected = false
+                            }), "Seleccionar", new { @class = "form-control" })
+                        </div>
+                        <hr />
+                        <div style="text-align:center">
+                            <button type="submit" class="btn btn-info">Aceptar</button>
+                            &nbsp;&nbsp;
+                            <img style="display:none" id="loading" width="25" height="25" src="~/Images/loading.gif" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+
